@@ -40,7 +40,7 @@ public class Application implements IApplication {
 
     public static void main(String[] args) {
         log("app.Application :: main : begin");
-        StringJoiner sj = new StringJoiner(" ,", "[", "]");
+        StringJoiner sj = new StringJoiner(", ", "[", "]");
         for (int i = 0; i < args.length; i++) {
             sj.add(args[i]);
         }

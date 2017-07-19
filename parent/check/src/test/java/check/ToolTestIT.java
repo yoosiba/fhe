@@ -42,7 +42,7 @@ public class ToolTestIT {
 		System.out.println("tool size is " + SizeUtil.bytesToHuman(size));
 
 		System.out.println("calling tool + " + url);
-		int exitCode = ProcessUtil.execute(JAVA_PATH + " -jar " + jar.getAbsolutePath(), "arg1", "2");
+		int exitCode = ProcessUtil.execute(JAVA_PATH + " -jar " + jar.getAbsolutePath() + " arg1 2");
 		assertEquals("process calling tool returned error code " + exitCode, OK, exitCode);
 
 	}

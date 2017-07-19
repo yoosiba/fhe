@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.StringJoiner;
 
 import org.eclipse.core.runtime.adaptor.EclipseStarter;
 import org.osgi.framework.Bundle;
@@ -126,10 +127,8 @@ public class ProductLauncher {
 
 		Bundle appBundle = context.getBundle(bundleID);
 		Class<?> appClass = appBundle.loadClass(classFqn);
-		final Method method = appClass.getMethod(methodToInvoke, String[].class);
-		final Object[] applicationArgs = new Object[1];
-		applicationArgs[0] = args;
-		return method.invoke(null, applicationArgs);
+		final Method method = appClass.getMethod(methodToInvoke, args.getClass());
+		return method.invoke(null, new Object[]{args});
 	}
 
 	private static Set<String> preLaodedBundlesNamePtterns(BundleContext context) {
