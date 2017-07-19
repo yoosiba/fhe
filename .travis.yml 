@@ -1,14 +1,18 @@
 sudo: false
+
 language: java
+
 addons:
   apt:
     packages:
       - oracle-java8-installer
+
 jdk:
  - oraclejdk8
- 
+
 before_script:
  - echo $HOME
  - echo $JAVA_OPTS
  - echo $MAVEN_OPTS
+
 script: mvn clean install ./parent/pom.xml -Dmaven.repo.local=./.repository -X -e
