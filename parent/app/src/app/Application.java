@@ -10,11 +10,14 @@
  ****************************************************************************** */
 package app;
 
+import static core.LogUtil.log;
+
 import java.util.StringJoiner;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
+
 import core.Greeter;
 
 /**
@@ -24,9 +27,9 @@ public class Application implements IApplication {
 
     @Override
     public Object start(IApplicationContext context) throws Exception {
-        System.out.println(System.currentTimeMillis() + " app.Application :: start : begin");
+        log("app.Application :: start : begin");
         doMain("IApplication.start");
-        System.out.println(System.currentTimeMillis() + " app.Application :: start : end");
+        log("app.Application :: start : end");
         return IApplication.EXIT_OK;
     }
 
@@ -36,20 +39,20 @@ public class Application implements IApplication {
     }
 
     public static void main(String[] args) {
-        System.out.println(System.currentTimeMillis() + " app.Application :: main : begin");
+        log("app.Application :: main : begin");
         StringJoiner sj = new StringJoiner(" ,", "[", "]");
         for (int i = 0; i < args.length; i++) {
             sj.add(args[i]);
         }
         doMain("Application.main with args " + sj.toString());
-        System.out.println(System.currentTimeMillis() + " app.Application :: main : end");
+        log("app.Application :: main : end");
     }
 
     private static void doMain(String location) {
-        System.out.println(System.currentTimeMillis() + " app.Application :: doMain : begin");
+        log("app.Application :: doMain : begin");
         Greeter greet = new Greeter();
         greet.greet(location);
-        System.out.println("BTW, Platform.isRunning() : " + Platform.isRunning());
-        System.out.println(System.currentTimeMillis() + " app.Application :: doMain : end");
+        log("BTW, Platform.isRunning() : " + Platform.isRunning());
+        log("app.Application :: doMain : end");
     }
 }
