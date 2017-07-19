@@ -88,7 +88,6 @@
 								<manifestEntries>
 									<Class-Path>${path.dot}</Class-Path>
 									<Rsrc-Main-Class>cli.ProductLauncher</Rsrc-Main-Class>
-									<!-- comma separated values, formatter breaks that -->
 									<Rsrc-Class-Path><![CDATA[${path.dot}/ MANIFEST.MF ${plugins.jars.list} ${plugins.file}]]></Rsrc-Class-Path>
 								</manifestEntries>
 							</archive>
