@@ -76,7 +76,7 @@ and assert if command line call works fine.
 * uses custom class loader copied from `org.eclipse.jdt.ui`
 
 ##### based on
- * custom class loader trick based on [Lorenzo Bettini/eclipse-fatjar-example](https://github.com/LorenzoBettini/eclipse-fatjar-example/tree/master/org.example.standalone)
+ * custom class loader trick I saw in [Lorenzo Bettini/eclipse-fatjar-example](https://github.com/LorenzoBettini/eclipse-fatjar-example/tree/master/org.example.standalone) (thx @szarnekow for the tip)
  * custom jar loader taken from [Eclipse JDT jar in jar loader ](https://github.com/eclipse/eclipse.jdt.ui/tree/master/org.eclipse.jdt.ui/jar%20in%20jar%20loader/org/eclipse/jdt/internal/jarinjarloader) 
  * tons of code search [GH code search](https://github.com/search?l=Java&o=desc&q=EclipseStarter.main&s=indexed&type=Code) 
  
