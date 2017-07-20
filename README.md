@@ -56,17 +56,17 @@ That is our headless application, defined by the product. You can launch it usin
 
 Besides normal `tycho` build for `prod` we use `maven-assembly-plugin` to create jar with all the jars of the product.
 
-Next we define plain maven java project `cli`. This project depends previously defined `prod.jar`. In its build we
-repackage all product jars into the `cli` jar. Additionally we have there small launcher class that will:
+Next we define project `cli`that depends previously defined `prod.jar`. In is a wrapper / launcher for our product
+that contains all product jars. Additionally it contains launcher code that will:
  * start eclipse / equinox platform using `org.eclipse.core.runtime.adaptor.EclipseStarter`
  * load / install / start all our product bundles
  * load concrete classes from eclipse bundles and invoke them, specifically our 'main' class from `app`
  * after execution launcher will shutdown the platform and exit.
-When building the `cli` we ensure to make it executable and self contained.
+When building the `cli.jar` we ensure to make it is executable and self contained.
 
 
-Just for tests example contains `check` plain java jar with test that will call the `cli` through the command line
-and assert if command line call to the jar works fine.
+Just for tests example contains `check` project with  test that will call the `cli.jar` through the command line
+and assert if command line call works fine.
 
 #### implementation (aka. shortcuts, hacks and duct tape)
 * lots of copying and packaging-repackaging jars
