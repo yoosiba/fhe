@@ -3,8 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: App Plug-in
 Bundle-SymbolicName: app; singleton:=true
 Bundle-Version: 1.0.0
-Require-Bundle: org.eclipse.core.runtime,
- core
+Require-Bundle: core,
+ org.eclipse.osgi,
+ org.eclipse.equinox.app,
+ org.eclipse.core.runtime
 Export-Package: app
 Bundle-Activator: app.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
