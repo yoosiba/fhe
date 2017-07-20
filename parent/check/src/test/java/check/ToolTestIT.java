@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.eclipse.core.runtime.Platform;
 import org.junit.Before;
 import org.junit.Test;
 
