@@ -85,39 +85,6 @@
 			</plugin>
 		</plugins>
 
-
-		<pluginManagement>
-			<plugins>
-				<!-- m2e has issues with preparing our dependency, we suppress it to 
-					make eclipse happy. It has no influence on the Maven build itself. -->
-				<!-- See https://stackoverflow.com/a/26378937 -->
-				<!-- See https://issues.apache.org/jira/browse/MDEP-187 -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.apache.maven.plugins</groupId>
-										<artifactId>maven-dependency-plugin</artifactId>
-										<versionRange>[3.0.0,)</versionRange>
-										<goals>
-											<goal>copy</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 
 	<dependencies>
