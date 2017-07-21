@@ -68,7 +68,7 @@ public class ProductLauncher {
 			}
 			log("finish install bundles");
 
-			log("laod bundle and invoke its method");
+			log("load bundle and invoke its method");
 			invoke(context, findBundle(context, MainBundleConstants.MAIN_BUNDLE_NAME_PATTERN),
 					MainBundleConstants.MAIN_BUNDLE_CLASS_FQN, MainBundleConstants.MAIN_BUNDLE_METHOD_NAME,
 					appCallArgs);

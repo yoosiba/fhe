@@ -10,7 +10,7 @@ java -jar cli.jar arg1 2
 17:01:57:784 start install bundles
 17:01:57:829 Skip install of already running bundle org.eclipse.osgi_3.12.0.v20170512-1932.jar
 17:01:57:829 finish install bundles
-17:01:57:829 laod bundle and invoke its method
+17:01:57:829 load bundle and invoke its method
 17:01:58:008 app.Application :: main : begin
 17:01:58:009 app.Application :: doMain : begin
 17:01:58:010 core.Greeter :: greet : start
