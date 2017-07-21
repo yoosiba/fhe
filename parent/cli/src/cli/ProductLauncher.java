@@ -24,6 +24,7 @@ import org.osgi.framework.BundleContext;
  * Product launcher that is responsible for starting Equinox / Eclipse and then
  * loading and running concrete bundles.
  */
+@SuppressWarnings("restriction")
 public class ProductLauncher {
 
 	/** see org.eclipse.core.runtime.adaptor.EclipseStarter.REFERENCE_SCHEME */
