@@ -15,4 +15,4 @@ before_script:
  - echo $JAVA_OPTS
  - echo $MAVEN_OPTS
 
-script: mvn clean install -f ./com.github.yoosiba.parent/pom.xml -Dmaven.repo.local=./.repository
+script: mvn clean install -f ./com.github.yoosiba.fhe.parent/pom.xml -Dmaven.repo.local=./.repository
