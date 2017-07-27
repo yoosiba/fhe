@@ -15,7 +15,7 @@
 
 	<properties>
 		<!-- Since tycho is deploying eclipse-repository as zip and not as jar, 
-			we will piggy back the product name and install jar with elipde plugins it 
+			we will piggyback the product name and install jar with eclipse plugins it 
 			into maven repo under product name. Note that piggybacking the product name 
 			will give us correct project build order . -->
 		<jarProductName>${project.artifactId}-${project.version}</jarProductName>
@@ -35,7 +35,7 @@
 				</configuration>
 			</plugin>
 
-			<!-- create attached jar wtih all plugins -->
+			<!-- create attached jar with all plugins -->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<executions>
