@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Core Plug-in
+Bundle-SymbolicName: com.github.yoosiba.fhe.core; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ActivationPolicy: lazy
+Export-Package: com.github.yoosiba.fhe.core
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

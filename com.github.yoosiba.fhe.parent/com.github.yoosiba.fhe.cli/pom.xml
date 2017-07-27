@@ -1,0 +1,150 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>com.github.yoosiba.fhe.cli</artifactId>
+	<packaging>eclipse-plugin</packaging>
+
+	<parent>
+		<groupId>com.github.yoosiba.fhe</groupId>
+		<artifactId>com.github.yoosiba.fhe.parent</artifactId>
+		<version>1.0.0</version>
+	</parent>
+
+	<properties>
+		<dir.lib>${project.build.directory}/lib</dir.lib>
+		<plugins.file>plugins-list.txt</plugins.file>
+		<path.dot>.</path.dot>
+	</properties>
+
+	<dependencies>
+		<!-- product plugins to be packaged in this jar -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>com.github.yoosiba.fhe.product</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- just for compilation, packaged jar will use dependnecies packed in 
+			the prod -->
+		<dependency>
+			<groupId>org.eclipse.platform</groupId>
+			<artifactId>org.eclipse.osgi</artifactId>
+			<version>3.11.2</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<plugins>
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>unpack-product</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>com.github.yoosiba.fhe.product</artifactId>
+									<type>jar</type>
+									<!-- <overWrite>true</overWrite> -->
+									<outputDirectory>${dir.lib}</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
+
+			<!-- create executable jar -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.0.2</version>
+				<!-- execution adds second jar -->
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<forceCreation>true</forceCreation>
+							<classifier>${cli.fat.jar.classifier}</classifier>
+							<archive>
+								<addMavenDescriptor>false</addMavenDescriptor>
+								<manifest>
+									<mainClass>org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader</mainClass>
+								</manifest>
+								<manifestEntries>
+									<Class-Path>${path.dot}</Class-Path>
+									<Rsrc-Main-Class>com.github.yoosiba.fhe.cli.ProductLauncher</Rsrc-Main-Class>
+									<Rsrc-Class-Path><![CDATA[${path.dot}/ MANIFEST.MF ${plugins.jars.list} ${plugins.file}]]></Rsrc-Class-Path>
+								</manifestEntries>
+							</archive>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<!-- add eclipse plugins contents to our executable jar -->
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<!-- cleanup folder with unpacked deps -->
+					<execution>
+						<id>list-jars-in-lib</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<!-- let maven use property with plugins list -->
+							<exportAntProperties>true</exportAntProperties>
+							<tasks>
+								<echo message="Running list-jars-in-lib in ${dir.lib}" />
+								<fileset id="dist.contents" dir="${dir.lib}" includes="*.jar*" />
+								<pathconvert pathsep=" " property="plugins.jars.list"
+									refid="dist.contents">
+									<map from="${dir.lib}/" to="" />
+								</pathconvert>
+								<echo>${plugins.jars.list}</echo>
+								<echo file="${dir.lib}/${plugins.file}">${plugins.jars.list}</echo>
+							</tasks>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>add-jar-in-jar</id>
+						<phase>package</phase>
+						<configuration>
+							<tasks>
+								<echo message="Adding content to cli-standalone" />
+								<!-- update our executable jar with unpacked eclipse bundles -->
+								<jar update="yes"
+									jarfile="${project.build.directory}/${project.artifactId}-${project.version}-${cli.fat.jar.classifier}.jar">
+									<fileset dir="${dir.lib}" />
+								</jar>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

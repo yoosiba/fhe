@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Core Plug-in
-Bundle-SymbolicName: core; singleton:=true
-Bundle-Version: 1.0.0
-Bundle-ActivationPolicy: lazy
-Export-Package: core
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8

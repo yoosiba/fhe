@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Cli Plug-in
+Bundle-SymbolicName: com.github.yoosiba.fhe.cli; singleton:=true
+Bundle-Version: 1.0.0
+Require-Bundle: org.eclipse.core.runtime,
+ com.github.yoosiba.fhe.application
+Export-Package: com.github.yoosiba.fhe.cli
+Bundle-Activator: com.github.yoosiba.fhe.cli.ProductLauncher
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
