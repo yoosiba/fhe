@@ -19,6 +19,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.adaptor.EclipseStarter;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
 
 /**
  * Product launcher that is responsible for starting Equinox / Eclipse and then
@@ -26,6 +27,8 @@ import org.osgi.framework.BundleContext;
  */
 @SuppressWarnings("restriction")
 public class ProductLauncher {
+
+	private static final String OSGI_CONFIG_AREA = "@user.dir/.siber_app";
 
 	/** see org.eclipse.core.runtime.adaptor.EclipseStarter.REFERENCE_SCHEME */
 	private final static String BUNDLE_INSTALL_SCHEME = "reference:file:/";
@@ -40,10 +43,11 @@ public class ProductLauncher {
 		}
 		// is user passed args are mixture of plain platform arguments and arguments for
 		// the (later) invoked bundle, then now is the time to process them.
-
-		String[] platformArgs = new String[] { "-consoleLog", "-debug" };
-
-		/** parameters for the product call, e.g. parameters for the N4JSC.class */
+		String[] platformArgs = new String[] { /* we set defaults in the map passed to the framework */ };
+		/**
+		 * parameters for the product call, e.g. parameters for the
+		 * com.github.yoosiba.fhe.application.Application
+		 */
 		String[] appCallArgs = args;
 
 		List<String> bundlesToInstall = getInstallableBundlesNames(PluginsToLoadConstants.BUNDLES_LIST_RESOURCE,
@@ -52,27 +56,16 @@ public class ProductLauncher {
 			throw new RuntimeException("No bundles to load discovered");
 
 		try {
-			BundleContext context = startPlatform(platformArgs);
 
-			Set<String> installedBundleDescriptions = preLaodedBundlesNamePtterns(context);
-			log("start install bundles");
-			for (Iterator<String> iterator = bundlesToInstall.iterator(); iterator.hasNext();) {
-				String bundle = (String) iterator.next();
-				if (isBundleLoaded(bundle, installedBundleDescriptions)) {
-					log("Skip install of already running bundle " + bundle);
-					continue;
-				}
-				InputStream bndInputStream = getResourceAsStream(bundle);
-				Objects.requireNonNull(bndInputStream, "Cannot obtain resource for bundle " + bundle);
-				context.installBundle(BUNDLE_INSTALL_SCHEME + bundle, bndInputStream);
-			}
-			log("finish install bundles");
+			final BundleContext context = startPlatform(platformArgs);
+
+			installBundles(bundlesToInstall, context);
 
 			log("load bundle and invoke its method");
-			invoke(context, findBundle(context, MainBundleConstants.MAIN_BUNDLE_NAME_PATTERN),
+			invoke(context, findBundleID(context, MainBundleConstants.MAIN_BUNDLE_NAME_PATTERN),
 					MainBundleConstants.MAIN_BUNDLE_CLASS_FQN, MainBundleConstants.MAIN_BUNDLE_METHOD_NAME,
 					appCallArgs);
-			log("invocation finised");
+			log("invocation finished");
 
 			shutdownPlatform();
 
@@ -91,17 +84,57 @@ public class ProductLauncher {
 
 	}
 
+	private static void installBundles(List<String> bundlesToInstall, BundleContext context) throws BundleException {
+		log("start install bundles");
+		Set<String> installedBundleDescriptions = preLaodedBundlesNamePtterns(context);
+		for (Iterator<String> iterator = bundlesToInstall.iterator(); iterator.hasNext();) {
+			String bundle = (String) iterator.next();
+			if (isBundleLoaded(bundle, installedBundleDescriptions)) {
+				log("SKIP INSTALL (already installed) bundle " + bundle);
+				continue;
+			}
+			log("INSTALL bundle " + bundle);
+			InputStream bndInputStream = getResourceAsStream(bundle);
+			Objects.requireNonNull(bndInputStream, "Cannot obtain resource for bundle " + bundle);
+			/*
+			 * The reference is not working jar-in-jar setup. We force
+			 * org.eclipse.osgi.storage.url.reference.ReferenceURLConnection here but
+			 * org.eclipse.osgi.storage.Storage will complain anyway. OSGI implementation
+			 * used here needs plain File instances for reading content.
+			 */
+			String loc = BUNDLE_INSTALL_SCHEME + bundle;
+			context.installBundle(loc, bndInputStream);
+		}
+		log("finish install bundles");
+	}
+
 	/**
 	 * {@link EclipseStarter#getSystemBundleContext}
 	 * 
 	 * @throws Exception
 	 */
 	private static BundleContext startPlatform(String[] platformArgs) throws Exception {
+
 		Map<String, String> ip = new HashMap<String, String>();
+
 		ip.put("eclipse.ignoreApp", "true");
+		// ip.put("eclipse.application.registerDescriptors", "true");
+
+		ip.put("eclipse.consoleLog", "true");
+		ip.put("eclipse.log.level", "ALL");
+
+		ip.put("osgi.debug", "true");
+		ip.put("osgi.debug.verbose", "true");
+		ip.put("eclipse.noRegistryCache", "true");
+		ip.put("osgi.framework.shape", "jar");
+		// TODO check user parameters, do not override user provided params!
+		/* location to which OSGI will extract ALL the bundles on install */
+		ip.put("osgi.configuration.area", OSGI_CONFIG_AREA);
+		/* force to extract bundles on each install */
 		ip.put("osgi.clean", "true");
-		ip.put(EclipseStarter.PROP_NOSHUTDOWN, "false");
-		ip.put(EclipseStarter.PROP_CONSOLE_LOG, "true");
+		ip.put("osgi.noShutdown", "false");
+
+		EclipseStarter.setInitialProperties(ip);
 		BundleContext context = EclipseStarter.startup(platformArgs, null);
 		return context;
 	}
@@ -110,7 +143,7 @@ public class ProductLauncher {
 		EclipseStarter.shutdown();
 	}
 
-	private static long findBundle(BundleContext context, String namePattern) {
+	private static long findBundleID(BundleContext context, String namePattern) {
 		Bundle[] installedBundles = context.getBundles();
 		for (int i = 0; i < installedBundles.length; i++) {
 			Bundle bundle = installedBundles[i];
@@ -128,7 +161,7 @@ public class ProductLauncher {
 		Bundle appBundle = context.getBundle(bundleID);
 		Class<?> appClass = appBundle.loadClass(classFqn);
 		final Method method = appClass.getMethod(methodToInvoke, args.getClass());
-		return method.invoke(null, new Object[]{args});
+		return method.invoke(null, new Object[] { args });
 	}
 
 	private static Set<String> preLaodedBundlesNamePtterns(BundleContext context) {
@@ -148,7 +181,6 @@ public class ProductLauncher {
 				return true;
 			}
 		}
-
 		return false;
 	}
 

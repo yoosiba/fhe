@@ -6,7 +6,10 @@ Bundle-Version: 1.0.0
 Require-Bundle: com.github.yoosiba.fhe.core,
  org.eclipse.osgi,
  org.eclipse.equinox.app,
- org.eclipse.core.runtime
-Export-Package: com.github.yoosiba.fhe.application
-Bundle-Activator: com.github.yoosiba.fhe.application.Activator
+ org.eclipse.core.runtime,
+ org.eclipse.equinox.registry
+Export-Package: com.github.yoosiba.fhe.application,
+ com.github.yoosiba.fhe.application.extension
+Bundle-Activator: com.github.yoosiba.fhe.application.ApplicationActivator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy

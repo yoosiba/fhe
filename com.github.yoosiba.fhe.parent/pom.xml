@@ -19,6 +19,7 @@
 		<module>com.github.yoosiba.fhe.check</module>
 		<module>com.github.yoosiba.fhe.cli</module>
 		<module>com.github.yoosiba.fhe.core</module>
+		<module>com.github.yoosiba.fhe.extension</module>
 		<module>com.github.yoosiba.fhe.product</module>
 	</modules>
 

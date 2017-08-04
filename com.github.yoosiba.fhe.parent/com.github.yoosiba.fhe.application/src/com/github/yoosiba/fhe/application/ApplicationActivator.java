@@ -1,10 +1,12 @@
 package com.github.yoosiba.fhe.application;
 
+import static com.github.yoosiba.fhe.core.LogUtil.log;
+
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-/***/
-public class Activator implements BundleActivator {
+/** No real work, just for logs. */
+public class ApplicationActivator implements BundleActivator {
 
 	private static BundleContext context;
 
@@ -14,14 +16,14 @@ public class Activator implements BundleActivator {
 
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
-		Activator.context = bundleContext;
-		 System.out.println(System.currentTimeMillis() + " app.Activator :: start : begin");
+		ApplicationActivator.context = bundleContext;
+
+		log("app.Activator :: start : begin");
 	}
 
 	@Override
 	public void stop(BundleContext bundleContext) throws Exception {
-		System.out.println(System.currentTimeMillis() + " app.Activator :: stop : begin");
-		Activator.context = null;
+		log("app.Activator :: stop : begin");
+		ApplicationActivator.context = null;
 	}
-
 }

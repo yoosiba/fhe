@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Product" uid="prod.product" id="app.applicationproduct" application="app.application" version="1.0.0" useFeatures="false" includeLaunchers="false">
+<product name="Product" uid="prod.product" id="com.github.yoosiba.fhe.application.applicationproduct" application="com.github.yoosiba.fhe.application.application" version="1.0.0" useFeatures="false" includeLaunchers="false">
 
    <configIni use="default">
    </configIni>
@@ -25,6 +25,7 @@
    <plugins>
       <plugin id="com.github.yoosiba.fhe.application"/>
       <plugin id="com.github.yoosiba.fhe.core"/>
+      <plugin id="com.github.yoosiba.fhe.extension"/>
       <plugin id="org.eclipse.core.contenttype"/>
       <plugin id="org.eclipse.core.jobs"/>
       <plugin id="org.eclipse.core.runtime"/>

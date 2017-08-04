@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 
+import com.github.yoosiba.fhe.application.extension.EvaluateContributionsHandler;
 import com.github.yoosiba.fhe.core.Greeter;
 
 /**
@@ -53,6 +54,8 @@ public class Application implements IApplication {
         Greeter greet = new Greeter();
         greet.greet(location);
         log("BTW, Platform.isRunning() : " + Platform.isRunning());
+        log("Let's exmine extensions" );
+        log("Extensions data: " + EvaluateContributionsHandler.executeAndGetData());
         log("app.Application :: doMain : end");
     }
 }

@@ -29,4 +29,7 @@ final class MainBundleConstants {
 	/** name of the method to invoke */
 	final static String MAIN_BUNDLE_METHOD_NAME = "main"; // hardcoded :/
 
+	
+	/** regex pattern used to identify product bundle to be pre started before the run */
+	final static String PRE_START_BUNDLE_NAME_PATTERN = "com.github.yoosiba.fhe.exten.*";
 }
