@@ -4,23 +4,43 @@
 
 Example of headless eclipse application packaged as single executable jar.
 
-Assuming it is properly `cli.jar` you can run it on the command line:
+Assuming build passed there will be `cli.jar` you can run on the command line:
 ```sh
 java -jar cli.jar arg1 2
-17:01:57:784 start install bundles
-17:01:57:829 Skip install of already running bundle org.eclipse.osgi_3.12.0.v20170512-1932.jar
-17:01:57:829 finish install bundles
-17:01:57:829 load bundle and invoke its method
-17:01:58:008 app.Application :: main : begin
-17:01:58:009 app.Application :: doMain : begin
-17:01:58:010 core.Greeter :: greet : start
-17:01:58:010 Hi, my name is Application.main with args [arg1, 2]
-17:01:58:010 core.Greeter :: greet : end
-17:01:58:146 BTW, Platform.isRunning() : true
-17:01:58:146 app.Application :: doMain : end
-17:01:58:146 app.Application :: main : end
-17:01:58:146 invocation finised
-17:01:58:222 finally
+Debug options:
+    file:/home/travis/build/yoosiba/fhe/com.github.yoosiba.fhe.parent/com.github.yoosiba.fhe.check/true not found
+13:48:54:190 start install bundles
+13:48:54:191 INSTALL bundle com.github.yoosiba.fhe.application_1.0.0.jar
+13:48:54:237 INSTALL bundle com.github.yoosiba.fhe.core_1.0.0.jar
+13:48:54:266 INSTALL bundle com.github.yoosiba.fhe.extension_1.0.0.jar
+13:48:54:294 INSTALL bundle org.eclipse.core.contenttype_3.6.0.v20170207-1037.jar
+13:48:54:322 INSTALL bundle org.eclipse.core.jobs_3.9.0.v20170322-0013.jar
+13:48:54:343 INSTALL bundle org.eclipse.core.runtime_3.13.0.v20170207-1030.jar
+13:48:54:348 INSTALL bundle org.eclipse.equinox.app_1.3.400.v20150715-1528.jar
+13:48:54:379 INSTALL bundle org.eclipse.equinox.common_3.9.0.v20170207-1454.jar
+13:48:54:388 INSTALL bundle org.eclipse.equinox.preferences_3.7.0.v20170126-2132.jar
+13:48:54:438 INSTALL bundle org.eclipse.equinox.registry_3.7.0.v20170222-1344.jar
+13:48:54:479 SKIP INSTALL (already installed) bundle org.eclipse.osgi_3.12.0.v20170512-1932.jar
+13:48:54:480 finish install bundles
+13:48:54:480 load bundle and invoke its method
+13:48:55:246 app.Activator :: start : begin
+13:48:55:262 app.Application :: main : begin
+13:48:55:263 app.Application :: doMain : begin
+13:48:55:265 core.Greeter :: greet : start
+13:48:55:268 Hi, my name is Application.main with args [arg1, 2]
+13:48:55:269 core.Greeter :: greet : end
+13:48:55:566 BTW, Platform.isRunning() : true
+13:48:55:567 Let's exmine extensions
+13:48:55:580 Collecting data
+13:48:55:581 Collecting data from org.eclipse.core.internal.registry.ConfigurationElementHandle@9
+13:48:55:595 ExtensionActivator :: start : begin
+13:48:55:601 Extensions data: com.github.yoosiba.fhe.extension.SomeExtension
+13:48:55:602 app.Application :: doMain : end
+13:48:55:602 app.Application :: main : end
+13:48:55:602 invocation finished
+13:48:55:645 ExtensionActivator :: stop : begin
+13:48:55:648 app.Activator :: stop : begin
+13:48:55:872 finally
 ```
 
 ## overview
@@ -32,15 +52,17 @@ this example focuses on the following:
  * no duplication of the product bundles between product file and launcher `pom.xml`
 
 ### design
-We have two ordinary `eclipse-bundles`
+We have ordinary `eclipse-bundles`
  * `core`
- * `app` that depends on `core`
+ * `application` that depends on `core`
+ * `extension` that registers itself in the `application` extension point
 Additionally we have `prod` bundle of type `eclipse-repository` which defines our headless product,
  i.e. it contains the `.product` with the following:
 ```xml
    <plugins>
-      <plugin id="app"/>
-      <plugin id="core"/>
+      <plugin id="com.github.yoosiba.fhe.application"/>
+      <plugin id="com.github.yoosiba.fhe.core"/>
+      <plugin id="com.github.yoosiba.fhe.extension"/>
       <plugin id="org.eclipse.core.contenttype"/>
       <plugin id="org.eclipse.core.jobs"/>
       <plugin id="org.eclipse.core.runtime"/>
