@@ -1,11 +1,13 @@
 package com.github.yoosiba.fhe.cli;
 
-import java.io.BufferedReader;
+import java.io.BufferedReader; 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,7 +30,6 @@ import org.osgi.framework.BundleException;
 @SuppressWarnings("restriction")
 public class ProductLauncher {
 
-	private static final String OSGI_CONFIG_AREA = "@user.dir/.siber_app";
 
 	/** see org.eclipse.core.runtime.adaptor.EclipseStarter.REFERENCE_SCHEME */
 	private final static String BUNDLE_INSTALL_SCHEME = "reference:file:/";
@@ -55,9 +56,13 @@ public class ProductLauncher {
 		if (bundlesToInstall.isEmpty())
 			throw new RuntimeException("No bundles to load discovered");
 
+		Path osgiConfigurationArea = Files.createTempDirectory("siber_app");
+		if(!osgiConfigurationArea.toFile().exists())
+			throw new RuntimeException("Cannot obtain working directory");
+		
 		try {
 
-			final BundleContext context = startPlatform(platformArgs);
+			final BundleContext context = startPlatform(platformArgs, osgiConfigurationArea);
 
 			installBundles(bundlesToInstall, context);
 
@@ -71,6 +76,11 @@ public class ProductLauncher {
 
 		} finally {
 			log("finally");
+			
+			log("working area exists : " + osgiConfigurationArea.toFile().exists());
+			FileDeleter.delete(osgiConfigurationArea);
+			log("working area exists : " + osgiConfigurationArea.toFile().exists());
+			
 			if (ThreadsUtil.getIdentifiedThredsCount(EQUINOX_THREAD_DESCRIPTION_TOKEN) > 0) {
 				log("There are still platform threads running:\n"
 						+ ThreadsUtil.getThreadsInfo(EQUINOX_THREAD_DESCRIPTION_TOKEN));
@@ -113,7 +123,7 @@ public class ProductLauncher {
 	 * 
 	 * @throws Exception
 	 */
-	private static BundleContext startPlatform(String[] platformArgs) throws Exception {
+	private static BundleContext startPlatform(String[] platformArgs, Path osgiConfigurationArea) throws Exception {
 
 		Map<String, String> ip = new HashMap<String, String>();
 
@@ -129,7 +139,7 @@ public class ProductLauncher {
 		ip.put("osgi.framework.shape", "jar");
 		// TODO check user parameters, do not override user provided params!
 		/* location to which OSGI will extract ALL the bundles on install */
-		ip.put("osgi.configuration.area", OSGI_CONFIG_AREA);
+		ip.put("osgi.configuration.area", osgiConfigurationArea.toAbsolutePath().toString());
 		/* force to extract bundles on each install */
 		ip.put("osgi.clean", "true");
 		ip.put("osgi.noShutdown", "false");
